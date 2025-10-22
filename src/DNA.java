@@ -15,38 +15,27 @@ public class DNA {
     /**
      * TODO: Complete this function, STRCount(), to return longest consecutive run of STR in sequence.
      */
-    public static int STRCount(String sequence, String STR) {
-        int tracker = 0;
-        int currentRun = 0;
-        int longestRun = 0;
-        int sequenceLength = sequence.length();
-        int STRlength = STR.length();
-        int index = 0;
-
-        for (int i = 0; i <= sequenceLength - STRlength; i++) {
-            index = i;
-            for (int j = 0; j <= STRlength - 1; j++) {
-                if (index >= sequenceLength || sequence.charAt(index) != STR.charAt(j)) {
-                    tracker = 0;
-                    currentRun = 0;
-                    break;
-                }
-                else {
-                    tracker++;
-                    index++;
-                    // Match found
-                    if (tracker == STRlength) {
-                        currentRun++;
-                        if (currentRun > longestRun) {
-                            longestRun = currentRun;
-                        }
-                        tracker = 0;
-                        j = -1;
-                    }
-                }
-            }
-
-        }
-        return longestRun;
+    private static final int RADIX = 4;
+    // Horners method
+    public static long hash(String t) {
+        int h = 0;
+        for (int i = 0; i < t.length(); i++)
+            h = (h * RADIX + t.charAt(i));
+        return h;
     }
+
+    public static int STRCount(String sequence, String STR) {
+        final int SEQUENCE_LENGTH = sequence.length();
+        final int STR_LENGTH = STR.length();
+
+        long strHash = hash(STR);
+        long seqHash = hash(sequence[0, STR_LENGTH - 1]);
+        for (int i = STR_LENGTH; i < SEQUENCE_LENGTH; i++)
+            if (strHash == seqHash)
+                // begin checking for consecutive appearances
+                // whereever you are add the length of the STR
+                seqHash = hash(sequence[1 + (i - STR_LENGTH), i]);
+
+    }
+
 }
